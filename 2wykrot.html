@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Level 2</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background:#f4f1ee;
+      text-align:center;
+      margin:0;
+    }
+
+    .box, .container {
+      background:white;
+      padding:25px;
+      border-radius:12px;
+      box-shadow:0 6px 12px rgba(0,0,0,0.2);
+      margin:20px auto;
+      max-width:700px;
+    }
+
+    .login {
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    h1 {
+      font-size:40px;
+      color:#b8860b;
+      letter-spacing:3px;
+      margin-bottom:10px;
+    }
+
+    input {
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #ccc;
+    }
+
+    button {
+      padding:12px 20px;
+      border:none;
+      border-radius:10px;
+      background:#b8860b;
+      color:white;
+      cursor:pointer;
+      font-size:16px;
+    }
+
+    .content {
+      display:none;
+    }
+
+    #timerBtn {
+      display:none;
+      margin-top:15px;
+    }
+
+    img {
+      max-width:100%;
+      display:none;
+      margin-top:20px;
+      border-radius:10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- LOGOWANIE -->
+<div class="login" id="loginBox">
+  <div class="box">
+    <h1>LEVEL 2</h1>
+    <h2>Podaj hasło</h2>
+    <input id="password" placeholder="hasło">
+    <br><br>
+    <button onclick="checkPassword()">Wejdź</button>
+    <p id="error" style="color:red; display:none;">Złe hasło</p>
+  </div>
+</div>
+
+<!-- TREŚĆ -->
+<div class="content" id="content">
+
+ <div class="container">
+  <h2>Wskazówka kierunkowa</h2>
+
+  <p>Wasza przygoda dopiero się rozpoczyna</p>
+  <p>Niech dołączy każdy chłopak i dziewczyna</p>
+
+  <p>Idź w stronę wschodzącego słońca</p>
+  <p>Przy wodzie ścieżka dobiegnie końca</p>
+
+  <p>Nad wodą cicho pień się pochyla,</p>
+  <p>A krzak zielony nad falą się kiwa.</p>
+
+  <p>Tuż nad taflą, gdzie plusk słychać w dali,</p>
+  <p>Kolejne skarby ktoś dla was zostawił.</p>
+
+  <p></p>
+  <p></p>
+</div>
+<div class="container">
+  <h2>Wodna opowieść - odszyfruj hasło</h2>
+
+  <p>Nad jeziorem, wśród trzcin i fal cichych,</p>
+  <p>Mieszkał Wodnik — opiekun miejsc dzikich. 🌿</p>
+
+  <p>Ciekawe  było mu imię nadane,</p>
+  <p>A wokół miał grono przyjaciół kochane.</p>
+
+  <p>Była tam żabka, był ślimak i rybki,</p>
+  <p>Każdy miał problem — mały lub szybki.</p>
+
+  <p>Razem przeżywali przygody nad wodą,</p>
+  <p>Pomagali sobie i żyli w zgodzie ze sobą.</p>
+
+  <p>To bajka o przyjaźni, naturze i zgodzie,</p>
+  <p>O tym, jak dobrze jest pomagać w przyrodzie.</p>
+
+  <p><strong>Czy wiesz, jak miał na imię?</strong></p>
+</div>
+<div class="container">
+  <h2>Obejrzyj film jeśli zgubisz do imienia rym</h2>
+  <a href="https://www.youtube.com/watch?v=3PRcUtpiYMY" target="_blank">
+    Kliknij tutaj, aby obejrzeć podpowiedź 🎬
+  </a>
+</div>
+
+
+  <div class="container">
+    <h2>Ukryta wskazówka</h2>
+    <button id="timerBtn" onclick="showImage()">Czekaj...</button>
+    <img id="img" src="2.jpeg">
+  </div>
+
+</div>
+
+<script>
+const correctPassword = "inicjum"; // ← zmień hasło
+let time = 300; // 5 minut
+
+function checkPassword(){
+  let val = document.getElementById("password").value;
+
+  if(val.toLowerCase() === correctPassword){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("content").style.display="block";
+    startTimer();
+    playMelody();
+  } else {
+    document.getElementById("error").style.display="block";
+  }
+}
+
+function startTimer(){
+  let btn = document.getElementById("timerBtn");
+  btn.style.display="inline-block";
+
+  let interval = setInterval(()=>{
+    let m = Math.floor(time/60);
+    let s = time%60;
+
+    btn.innerText = `Odblokuje się za ${m}:${s.toString().padStart(2,'0')}`;
+    btn.disabled = true;
+
+    time--;
+
+    if(time < 0){
+      clearInterval(interval);
+      btn.innerText = "Kliknij, aby odkryć";
+      btn.disabled = false;
+    }
+
+  },1000);
+}
+
+function showImage(){
+  document.getElementById("img").style.display="block";
+}
+
+// 🎵 klimatyczna melodyjka (fantasy vibe)
+function playMelody(){
+  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+
+  const notes=[261,329,392,523,392,329,261,294,349,440,587];
+
+  notes.forEach((f,i)=>{
+    let o=ctx.createOscillator();
+    let g=ctx.createGain();
+
+    o.type="triangle";
+    o.frequency.value=f;
+
+    o.connect(g);
+    g.connect(ctx.destination);
+
+    o.start(ctx.currentTime+i*0.25);
+    o.stop(ctx.currentTime+i*0.25+0.2);
+  });
+}
+</script>
+
+</body>
+</html>
